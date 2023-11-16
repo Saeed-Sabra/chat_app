@@ -1,4 +1,6 @@
+import 'package:chat_app/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../components/my_button.dart';
 import '../components/my_text_field.dart';
@@ -16,7 +18,32 @@ class _RegisterState extends State<RegisterPage> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
-  void singup() {}
+  void singup() async {
+    if (passwordController.text != confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Passwords do not match",
+          ),
+        ),
+      );
+      return;
+    }
+
+    final authService = Provider.of<AuthService>(context, listen: false);
+    try {
+      await authService.signUpWithEmailandPassword(
+          emailController.text, passwordController.text);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            e.toString(),
+          ),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,9 +80,9 @@ class _RegisterState extends State<RegisterPage> {
                   ),
                   const SizedBox(height: 10),
                   MyTextField(
-                    controller: emailController,
+                    controller: passwordController,
                     hintText: "Password",
-                    obscuredText: false,
+                    obscuredText: true,
                   ),
                   const SizedBox(height: 10),
                   MyTextField(
