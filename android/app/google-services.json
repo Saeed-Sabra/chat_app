@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "821017393338",
+    "project_id": "chat-apptutu",
+    "storage_bucket": "chat-apptutu.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:821017393338:android:f461c43cebce6560a3aa83",
+        "android_client_info": {
+          "package_name": "com.example.chat_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBI3Gdebk-Rr0MxAT0o6xl830O71mm9OD0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
