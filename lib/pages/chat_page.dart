@@ -1,3 +1,4 @@
+import 'package:chat_app/components/chat_bubble.dart';
 import 'package:chat_app/services/chat/chat_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -35,23 +36,26 @@ class _ChatPageState extends State<ChatPage> {
   Widget _buildMessageInput() {
     return Container(
       padding: const EdgeInsets.all(8),
-      child: Row(
-        children: [
-          Expanded(
-            child: MyTextField(
-              controller: _messageController,
-              // decoration: const InputDecoration(
-              hintText: 'Type a message',
-              obscuredText: false,
-              // border: OutlineInputBorder(),
-              // ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        child: Row(
+          children: [
+            Expanded(
+              child: MyTextField(
+                controller: _messageController,
+                // decoration: const InputDecoration(
+                hintText: 'Type a message',
+                obscuredText: false,
+                // border: OutlineInputBorder(),
+                // ),
+              ),
             ),
-          ),
-          IconButton(
-            onPressed: sendMessage,
-            icon: const Icon(Icons.send),
-          ),
-        ],
+            IconButton(
+              onPressed: sendMessage,
+              icon: const Icon(Icons.send),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -77,7 +81,8 @@ class _ChatPageState extends State<ChatPage> {
                   : MainAxisAlignment.start,
           children: [
             Text(data['senderEmail']),
-            Text(data['message']),
+            const SizedBox(height: 5),
+            ChatBubble(message: data['message']),
           ],
         ),
       ),
@@ -109,6 +114,7 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.receiverUserEmail),
+        backgroundColor: Colors.grey.shade700,
       ),
       body: Column(
         children: [
@@ -116,6 +122,7 @@ class _ChatPageState extends State<ChatPage> {
             child: _buildMessageList(),
           ),
           _buildMessageInput(),
+          const SizedBox(height: 10),
         ],
       ),
     );

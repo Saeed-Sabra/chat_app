@@ -28,6 +28,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home Page"),
+        backgroundColor: Colors.grey.shade700,
         actions: [
           IconButton(
             onPressed: signOut,
