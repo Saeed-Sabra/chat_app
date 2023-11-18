@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 import '../components/my_text_field.dart';
 
 class ChatPage extends StatefulWidget {
-  final String receiverUserEmail;
+  final String receiverUserName;
   final String receiverUserID;
   const ChatPage(
       {super.key,
-      required this.receiverUserEmail,
+      required this.receiverUserName,
       required this.receiverUserID});
 
   @override
@@ -80,9 +80,11 @@ class _ChatPageState extends State<ChatPage> {
                   ? MainAxisAlignment.end
                   : MainAxisAlignment.start,
           children: [
-            Text(data['senderEmail']),
+            Text(data['senderName']),
             const SizedBox(height: 5),
             ChatBubble(message: data['message']),
+            // const SizedBox(height: 5),
+            // Text(data['timestamp'].toString()),
           ],
         ),
       ),
@@ -113,7 +115,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.receiverUserEmail),
+        title: Text(widget.receiverUserName),
         backgroundColor: Colors.grey.shade700,
       ),
       body: Column(

@@ -14,6 +14,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterState extends State<RegisterPage> {
+  final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
@@ -33,7 +34,7 @@ class _RegisterState extends State<RegisterPage> {
     final authService = Provider.of<AuthService>(context, listen: false);
     try {
       await authService.signUpWithEmailandPassword(
-          emailController.text, passwordController.text);
+          nameController.text, emailController.text, passwordController.text);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -73,6 +74,12 @@ class _RegisterState extends State<RegisterPage> {
                     ),
                   ),
                   const SizedBox(height: 25),
+                  MyTextField(
+                    controller: nameController,
+                    hintText: "Name",
+                    obscuredText: false,
+                  ),
+                  const SizedBox(height: 10),
                   MyTextField(
                     controller: emailController,
                     hintText: "Email",
