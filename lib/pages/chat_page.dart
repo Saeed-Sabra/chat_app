@@ -9,9 +9,11 @@ import '../components/my_text_field.dart';
 class ChatPage extends StatefulWidget {
   final String receiverUserName;
   final String receiverUserID;
+  // final String senderName;
   const ChatPage(
       {super.key,
       required this.receiverUserName,
+      // required this.senderName,
       required this.receiverUserID});
 
   @override
@@ -83,8 +85,15 @@ class _ChatPageState extends State<ChatPage> {
             Text(data['senderName']),
             const SizedBox(height: 5),
             ChatBubble(message: data['message']),
-            // const SizedBox(height: 5),
-            // Text(data['timestamp'].toString()),
+            const SizedBox(height: 5),
+            Text(
+              // DateFormat('HH:mm').format(doc.get("createdAt").toDate()),
+              data['timestamp'].toDate().toString(),
+              style: const TextStyle(
+                fontSize: 10,
+                color: Colors.grey,
+              ),
+            ),
           ],
         ),
       ),
@@ -97,7 +106,7 @@ class _ChatPageState extends State<ChatPage> {
           widget.receiverUserID, _firebaseAuth.currentUser!.uid),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Text("Error " + snapshot.error.toString());
+          return Text("Error ${snapshot.error}");
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Text("Loading...");

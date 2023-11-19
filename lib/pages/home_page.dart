@@ -65,10 +65,40 @@ class _HomePageState extends State<HomePage> {
   Widget _buildUserListItem(DocumentSnapshot document) {
     Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
 
-    //display all user except current user
     if (_auth.currentUser!.email != data['email']) {
       return ListTile(
-        title: Text(data['name']),
+        title: Row(
+          children: [
+            Text(
+              data['name'],
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              data['email'],
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 5),
+            Text(
+              data['createdAt'].toDate().toString(),
+              style: const TextStyle(
+                fontSize: 10,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
         onTap: () {
           //pass the clicked users UID to the chat page
           Navigator.push(

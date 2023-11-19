@@ -42,6 +42,8 @@ class AuthService extends ChangeNotifier {
         email: email,
         password: password,
       );
+      // Now, set the display name
+      await userCredential.user?.updateDisplayName(name);
 
       _fireStore.collection("users").doc(userCredential.user!.uid).set({
         "uid": userCredential.user!.uid,
