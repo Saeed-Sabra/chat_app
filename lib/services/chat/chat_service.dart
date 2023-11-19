@@ -55,4 +55,26 @@ class ChatService extends ChangeNotifier {
         .orderBy("timestamp", descending: false)
         .snapshots();
   }
+    // Get the last message from a chat room
+  Future<Message?> getLastMessage(String userId, String otherUserId) async {
+    List<String> ids = [userId, otherUserId];
+    ids.sort();
+    String chatRoomId = ids.join("_");
+
+    QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
+        .collection("chat_rooms")
+        .doc(chatRoomId)
+        .collection("messages")
+        .orderBy("timestamp", descending: true)
+        .limit(1)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      Map<String, dynamic> lastMessageData = snapshot.docs.first.data();
+      return Message.fromMap(lastMessageData);
+    } else {
+      return null;
+    }
+  }
+
 }

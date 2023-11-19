@@ -3,6 +3,7 @@ import 'package:chat_app/services/chat/chat_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../components/my_text_field.dart';
 
@@ -24,7 +25,7 @@ class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
   final ChatService _chatService = ChatService();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-
+  final ScrollController _scrollController = ScrollController();
   void sendMessage() async {
     if (_messageController.text.isNotEmpty) {
       await _chatService.sendMessage(
@@ -32,6 +33,13 @@ class _ChatPageState extends State<ChatPage> {
         _messageController.text,
       );
       _messageController.clear();
+
+      // Scroll to the bottom of the list after sending a message
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+      );
     }
   }
 
@@ -87,8 +95,7 @@ class _ChatPageState extends State<ChatPage> {
             ChatBubble(message: data['message']),
             const SizedBox(height: 5),
             Text(
-              // DateFormat('HH:mm').format(doc.get("createdAt").toDate()),
-              data['timestamp'].toDate().toString(),
+              DateFormat('HH:mm').format(data['timestamp'].toDate()),
               style: const TextStyle(
                 fontSize: 10,
                 color: Colors.grey,
@@ -112,7 +119,9 @@ class _ChatPageState extends State<ChatPage> {
           return const Text("Loading...");
         }
 
+        // Assign the controller to the ListView
         return ListView(
+          controller: _scrollController,
           children:
               snapshot.data!.docs.map((doc) => _buildMessageItem(doc)).toList(),
         );

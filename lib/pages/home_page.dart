@@ -5,6 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../model/message.dart';
+import '../services/chat/chat_service.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -15,6 +18,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   // instance of auth
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final ChatService _chatService = ChatService();
 
   //sign user out
   void signOut() {
@@ -90,13 +94,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 5),
-            Text(
-              data['createdAt'].toDate().toString(),
-              style: const TextStyle(
-                fontSize: 10,
-                color: Colors.grey,
-              ),
-            ),
+            _buildLastMessage(data['uid']),
           ],
         ),
         onTap: () {
@@ -116,4 +114,43 @@ class _HomePageState extends State<HomePage> {
       return Container();
     }
   }
+
+  Widget _buildLastMessage(String receiverUserID) {
+  return StreamBuilder<QuerySnapshot>(
+    stream: _chatService.getMessages(_auth.currentUser!.uid, receiverUserID),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Text("Loading last message...");
+      }
+
+      if (snapshot.hasError) {
+        return Text("Error loading last message");
+      }
+
+      if (snapshot.data != null && snapshot.data!.docs.isNotEmpty) {
+        // Get the last message from the snapshot
+        Map<String, dynamic> lastMessageData =
+            snapshot.data!.docs.last.data() as Map<String, dynamic>;
+        Message lastMessage = Message.fromMap(lastMessageData);
+
+        // Check if the message is unread (not read)
+        bool isUnread = !lastMessage.read;
+
+        return Text(
+          isUnread
+              ? 'New Message: ${lastMessage.message}' // Add indication for unread messages
+              : lastMessage.message,
+          style: TextStyle(
+            fontSize: 12,
+            color: isUnread ? Colors.blue : Colors.black,
+            fontWeight: isUnread ? FontWeight.bold : FontWeight.normal,
+          ),
+        );
+      } else {
+        return Text("No messages yet");
+      }
+    },
+  );
+}
+
 }
