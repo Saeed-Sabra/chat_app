@@ -116,41 +116,34 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildLastMessage(String receiverUserID) {
-  return StreamBuilder<QuerySnapshot>(
-    stream: _chatService.getMessages(_auth.currentUser!.uid, receiverUserID),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return Text("Loading last message...");
-      }
+    return StreamBuilder<QuerySnapshot>(
+      stream: _chatService.getMessages(_auth.currentUser!.uid, receiverUserID),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Text("Loading last message...");
+        }
 
-      if (snapshot.hasError) {
-        return Text("Error loading last message");
-      }
+        if (snapshot.hasError) {
+          return const Text("Error loading last message");
+        }
 
-      if (snapshot.data != null && snapshot.data!.docs.isNotEmpty) {
-        // Get the last message from the snapshot
-        Map<String, dynamic> lastMessageData =
-            snapshot.data!.docs.last.data() as Map<String, dynamic>;
-        Message lastMessage = Message.fromMap(lastMessageData);
-
-        // Check if the message is unread (not read)
-        bool isUnread = !lastMessage.read;
-
-        return Text(
-          isUnread
-              ? 'New Message: ${lastMessage.message}' // Add indication for unread messages
-              : lastMessage.message,
-          style: TextStyle(
-            fontSize: 12,
-            color: isUnread ? Colors.blue : Colors.black,
-            fontWeight: isUnread ? FontWeight.bold : FontWeight.normal,
-          ),
-        );
-      } else {
-        return Text("No messages yet");
-      }
-    },
-  );
-}
-
+        if (snapshot.data != null && snapshot.data!.docs.isNotEmpty) {
+          // Get the last message from the snapshot
+          Map<String, dynamic> lastMessageData =
+              snapshot.data!.docs.last.data() as Map<String, dynamic>;
+          Message lastMessage = Message.fromMap(lastMessageData);
+          return Text(
+            lastMessage.message,
+            style: const TextStyle(
+              fontSize: 12,
+              color: Colors.blue,
+              fontWeight: FontWeight.bold,
+            ),
+          );
+        } else {
+          return const Text("No messages yet");
+        }
+      },
+    );
+  }
 }

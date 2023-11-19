@@ -6,7 +6,6 @@ class Message {
   final String receiverId;
   final String message;
   final Timestamp timestamp;
-  final bool read; // Added property
 
   Message({
     required this.senderId,
@@ -14,7 +13,6 @@ class Message {
     required this.receiverId,
     required this.message,
     required this.timestamp,
-    this.read = false, // Default to false
   });
 
 //convert to a map
@@ -25,7 +23,6 @@ class Message {
       "receiverId": receiverId,
       "message": message,
       "timestamp": timestamp,
-      "read": read,
     };
   }
 
@@ -36,7 +33,6 @@ class Message {
       receiverId: map["receiverId"],
       message: map["message"],
       timestamp: map["timestamp"],
-      read: map["read"] ?? false, // Use default value if "read" is not present
     );
   }
 }
